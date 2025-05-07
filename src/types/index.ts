@@ -1,32 +1,10 @@
 export interface ICard {
 	id: string;
-	description?: string;
+	description: string;
 	image: string;
 	title: string;
 	category: string;
 	price: number;
-}
-
-export interface IPage {
-    counter: number;
-    catalog: HTMLElement[];
-    locked: boolean;
-}
-
-export interface ICardPreview {
-	cards: ICard[];
-}
-
-export interface IBasketItem {
-	id: string;
-	element: HTMLElement;
-	price: number;
-}
-
-export interface IBasketView {
-	items: HTMLElement[];
-	total: number;
-	selected: string;
 }
 
 export interface IOrder {
@@ -35,22 +13,26 @@ export interface IOrder {
 	phone: string;
 	address: string;
 	total: number;
-	cards: string[];
+	items: string[];
 }
 
-export interface IForm {
-	getContact(contactData: TFormOrder | TFormContacts): void;
-	checkValidation(
-		date: Record<keyof (TFormOrder | TFormContacts), string>
-	): boolean;
-	action(collback: Function | null): void;
+export interface ICardsData {
+	cards: ICard[];
+	preview: string | null;
 }
 
-export type TBasketList = Pick<ICard, 'id' | 'title' | 'price'>;
+// export interface IOrdersData {
+// 	addItem(item: TBaskeCompact): void;
+// 	deleteItem(cardId: string | null): void;
+// 	updatwBasketItems(basketList: HTMLElement[]): void;
+// 	checkValidation(data: Record<keyof TFormOrder, string>): boolean;
+// }
 
-export type TFormOrder = Pick<IOrder, 'payment' | 'address'>;
+export type TCardFull = Pick<ICard, 'id' | 'title' | 'price' | 'image' | 'category' | 'description'>;
 
-export type TFormContacts = Pick<IOrder, 'email' | 'phone'>;
+export type TBaskeCompact = Pick<ICard, 'id' | 'title' | 'price'>;
+
+export type TFormOrder = Pick<IOrder, 'payment' | 'address' | 'email' | 'phone'>;
 
 export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 

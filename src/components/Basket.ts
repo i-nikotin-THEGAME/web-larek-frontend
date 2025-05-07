@@ -1,7 +1,13 @@
-import { Component } from '../base/Component';
-import { createElement, ensureElement, formatPrice } from '../../utils/utils';
-import { IEvents } from '../base/events';
-import { IBasketItem, IBasketView } from '../../types';
+import { Component } from './base/Component';
+import { createElement, ensureElement, formatPrice } from '../utils/utils';
+import { IEvents } from './base/events';
+import { IBasketItem } from './BasketItems';
+
+interface IBasketView {
+	items: HTMLElement[];
+	total: number;
+	selected: string;
+}
 
 export class Basket extends Component<IBasketView> {
 	protected basketItems: IBasketItem[] = [];
@@ -31,16 +37,16 @@ export class Basket extends Component<IBasketView> {
 		return this.basketItems.length;
 	}
 
-	addItem(data: IBasketItem): void {
-		if (!this.basketItems.some((item) => item.id === data.id)) {
-			this.basketItems.push(data);
+	addItem(item: IBasketItem): void {
+		if (!this.basketItems.some((items) => items.id === item.id)) {
+			this.basketItems.push(item);
 			this.updateTotal();
 			this.events.emit('basket:changed');
 		}
 	}
 
-	deleteItem(data: string): void {
-		const index = this.basketItems.findIndex((item) => item.id === data);
+	deleteItem(cardId: string): void {
+		const index = this.basketItems.findIndex((item) => item.id === cardId);
 		if (index !== -1) {
 			this.basketItems.splice(index, 1);
 			this.updateTotal();
@@ -49,14 +55,14 @@ export class Basket extends Component<IBasketView> {
 		console.log('basketItems', this.basketItems, index);
 	}
 
-	updatwBasketItems(items: HTMLElement[]) {
+	updatwBasketItems(basketList: HTMLElement[]): void {
 		if (this.basketItems.length) {
-			items.forEach((item, index) => {
+			basketList.forEach((item, index) => {
 				const indexSpan = item.querySelector('.basket__item-index');
 				if (indexSpan) {
 					indexSpan.textContent = String(index + 1);
 				}
-				this.list.replaceChildren(...items);
+				this.list.replaceChildren(...basketList);
 			});
 		} else {
 			this.list.replaceChildren(

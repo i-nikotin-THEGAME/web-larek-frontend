@@ -1,9 +1,12 @@
 import {Component} from "./base/Component";
 import {IEvents} from "./base/events";
 import {ensureElement} from "../utils/utils";
-import { IPage } from "../types";
 
-export class Page extends Component<IPage> {
+interface IPageContainer {
+    catalog: HTMLElement[];
+}
+
+export class Page extends Component<IPageContainer> {
     protected _counter: HTMLElement;
     protected _catalog: HTMLElement;
     protected wrapper: HTMLElement;

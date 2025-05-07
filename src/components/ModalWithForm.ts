@@ -1,13 +1,16 @@
 import { Modal } from './common/Modal';
 import { IEvents } from './base/events';
+// import { TFormContacts, TFormOrder } from '../types';
 
-interface IModal {
-	valid: boolean;
-	inputValues: Record<string, string>;
-	error: Record<string, string>;
+interface IForm {
+	// getContact(contactData: TFormOrder | TFormContacts): void;
+	// checkValidation(
+	// 	date: Record<keyof (TFormOrder | TFormContacts), string>
+	// ): boolean;
+	// action(collback: Function | null): void;
 }
 
-export class ModalWithValidation extends Modal<IModal> {
+export class ModalWithForm extends Modal<IForm> {
 	protected inputs?: NodeListOf<HTMLInputElement>;
 	protected _form?: HTMLFormElement;
 	protected errors?: HTMLElement;

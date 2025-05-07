@@ -1,7 +1,13 @@
 import { Component } from "./base/Component";
 import { formatPrice } from '../utils/utils';
 import { IEvents } from "./base/events";
-import { IBasketItem, TBasketList } from "../types";
+import { TBaskeCompact } from "../types";
+
+export interface IBasketItem {
+	id: string;
+	element: HTMLElement;
+	price: number;
+}
 
 export class BasketItems extends Component<IBasketItem> {
     protected events: IEvents;
@@ -28,7 +34,7 @@ export class BasketItems extends Component<IBasketItem> {
         }
     }
 
-    render(data?: Partial<TBasketList>): HTMLElement {
+    render(data?: Partial<TBaskeCompact>): HTMLElement {
         if (data) {
             this.basketTitle.textContent = data.title || '';
             if (data.price !== null) {

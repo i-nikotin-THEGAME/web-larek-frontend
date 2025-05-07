@@ -1,14 +1,14 @@
 import { AppApi } from './components/AppApi';
 import { Api } from './components/base/api';
 import { EventEmitter } from './components/base/events';
-import { BasketItems } from './components/BasketItems';
+import { BasketItems, IBasketItem } from './components/BasketItems';
 import { Card } from './components/Card';
 import { CardData } from './components/CardData';
-import { Basket } from './components/common/Basket';
+import { Basket } from './components/Basket';
 import { Modal } from './components/common/Modal';
 import { Page } from './components/Page';
 import './scss/styles.scss';
-import { IApi, IBasketItem } from './types';
+import { IApi } from './types';
 import { API_URL, settings, CDN_URL } from './utils/constants';
 import { cloneTemplate, ensureElement } from './utils/utils';
 
