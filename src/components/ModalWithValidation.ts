@@ -7,15 +7,15 @@ interface IModal {
 	error: Record<string, string>;
 }
 
-export class ModalView extends Modal <IModal> {
-	protected inputs: NodeListOf<HTMLInputElement>;
-	protected _form: HTMLFormElement;
-	protected errors: HTMLElement;
-	protected formName: string;
-	protected submitButton: HTMLButtonElement;
+export class ModalWithValidation extends Modal<IModal> {
+	protected inputs?: NodeListOf<HTMLInputElement>;
+	protected _form?: HTMLFormElement;
+	protected errors?: HTMLElement;
+	protected formName?: string;
+	protected submitButton?: HTMLButtonElement;
 
-    constructor (container: HTMLElement, events: IEvents) {
-        super(container, events)
+	constructor(container: HTMLElement, events: IEvents) {
+		super(container, events);
 		this.inputs =
 			this.container.querySelectorAll<HTMLInputElement>('.form__input');
 		this._form = this.container.querySelector('.form');
@@ -72,7 +72,7 @@ export class ModalView extends Modal <IModal> {
 	}
 
 	set valid(isValid: boolean) {
-		console.log({isValid})
+		console.log({ isValid });
 		// this.submitButton.classList.toggle('popup__button_disabled', !isValid);
 		this.submitButton.disabled = !isValid;
 	}
@@ -87,6 +87,5 @@ export class ModalView extends Modal <IModal> {
 		this.inputs.forEach((element) => {
 			this.hideInputError(element.name);
 		});
-
 	}
 }

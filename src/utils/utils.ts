@@ -10,6 +10,10 @@ export function isEmpty(value: any): boolean {
     return value === null || value === undefined;
 }
 
+export function formatPrice(price: number): string {
+    return new Intl.NumberFormat('ru-RU').format(price);
+}
+
 export type SelectorCollection<T> = string | NodeListOf<Element> | T[];
 
 export function ensureAllElements<T extends HTMLElement>(selectorElement: SelectorCollection<T>, context: HTMLElement = document as unknown as HTMLElement): T[] {
