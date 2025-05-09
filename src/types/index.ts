@@ -21,18 +21,20 @@ export interface ICardsData {
 	preview: string | null;
 }
 
-// export interface IOrdersData {
-// 	addItem(item: TBaskeCompact): void;
-// 	deleteItem(cardId: string | null): void;
-// 	updatwBasketItems(basketList: HTMLElement[]): void;
-// 	checkValidation(data: Record<keyof TFormOrder, string>): boolean;
-// }
+export interface IOrdersData {
+	addItem(item: string): void;
+	deleteItem(item: string | null): void;
+	checkOrderValidation(data: TFormOrder): boolean;
+	checkContactValidation(data: Record< keyof TFormContact, string>): boolean;
+}
 
 export type TCardFull = Pick<ICard, 'id' | 'title' | 'price' | 'image' | 'category' | 'description'>;
 
 export type TBaskeCompact = Pick<ICard, 'id' | 'title' | 'price'>;
 
-export type TFormOrder = Pick<IOrder, 'payment' | 'address' | 'email' | 'phone'>;
+export type TFormOrder = Pick<IOrder, 'payment' | 'address'>;
+
+export type TFormContact = Pick<IOrder, 'email' | 'phone'>;
 
 export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 

@@ -4,10 +4,8 @@ import { IEvents } from './base/events';
 export class CardData implements ICardsData {
 	protected _cards: ICard[];
 	protected _preview: string | null;
-	protected total: number;
 
 	constructor(protected events: IEvents) {
-		this.events = events;
 	}
 
 	set cards(cards: ICard[]) {

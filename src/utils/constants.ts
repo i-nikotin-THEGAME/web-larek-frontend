@@ -6,7 +6,10 @@ export const settings = {
 };
 
 export const constraintsOrder = {
-	name: {
+	payment: {
+		presence: { message: '^Не выбран способ оплаты', allowEmpty: false },
+	},
+	address: {
 		presence: { message: '^Поле не может быть пустым', allowEmpty: false },
 		length: {
 			minimum: 2,

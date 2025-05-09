@@ -3,7 +3,7 @@ import { Component } from '../base/Component';
 import { IEvents } from '../base/events';
 
 export class Modal<T> extends Component<T> {
-  protected content: HTMLElement;
+	protected content: HTMLElement;
 	protected events: IEvents;
 
 	constructor(container: HTMLElement, events: IEvents) {
@@ -32,7 +32,7 @@ export class Modal<T> extends Component<T> {
 	close() {
 		this.container.classList.remove('modal_active');
 		document.removeEventListener('keyup', this.handleEscUp);
-		this.events.emit('modal:close');
+		this.events.emit('modal:close'), { container: this };
 	}
 
 	handleEscUp(evt: KeyboardEvent) {

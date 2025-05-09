@@ -2,11 +2,11 @@ import { Component } from './base/Component';
 import { createElement, ensureElement, formatPrice } from '../utils/utils';
 import { IEvents } from './base/events';
 import { IBasketItem } from './BasketItems';
+import { TBaskeCompact } from '../types';
 
 interface IBasketView {
 	items: HTMLElement[];
 	total: number;
-	selected: string;
 }
 
 export class Basket extends Component<IBasketView> {
@@ -21,7 +21,7 @@ export class Basket extends Component<IBasketView> {
 
 		this.list = ensureElement<HTMLElement>('.basket__list', this.container);
 		this._total = this.container.querySelector('.basket__price');
-		this.button = this.container.querySelector('.modal__actions');
+		this.button = this.container.querySelector('.basket__button');
 		if (this.button) {
 			this.button.addEventListener('click', () => {
 				events.emit('order:open');
@@ -29,27 +29,27 @@ export class Basket extends Component<IBasketView> {
 		}
 	}
 
-	get basketList(): HTMLElement[] {
-		return this.basketItems.map((item) => item.element);
-	}
+	// get basketList(): HTMLElement[] {
+		// return this.basketItems.map((item) => item.element);
+	// }
 
 	get lengthBasketItems(): number {
 		return this.basketItems.length;
 	}
 
-	addItem(item: IBasketItem): void {
-		if (!this.basketItems.some((items) => items.id === item.id)) {
-			this.basketItems.push(item);
-			this.updateTotal();
+	addItem(item: keyof TBaskeCompact): void {
+		if (!this.basketItems.some((items) => items.id === item)) {
+			// this.basketItems.push(item);
+			// this.updateTotal(item.price);
 			this.events.emit('basket:changed');
 		}
 	}
 
-	deleteItem(cardId: string): void {
-		const index = this.basketItems.findIndex((item) => item.id === cardId);
+	deleteItem(cardId: TBaskeCompact): void {
+		const index = this.basketItems.findIndex((item) => item.id === cardId.id);
 		if (index !== -1) {
 			this.basketItems.splice(index, 1);
-			this.updateTotal();
+			this.updateTotal(cardId.price);
 			this.events.emit('basket:changed');
 		}
 		console.log('basketItems', this.basketItems, index);
@@ -73,8 +73,8 @@ export class Basket extends Component<IBasketView> {
 		}
 	}
 
-	private updateTotal(): void {
-		const total = this.basketItems.reduce((sum, item) => sum + item.price, 0);
-		this.setText(this._total, `${formatPrice(total)} синапсов`);
+	private updateTotal(data: number): void {
+		// const total = this.basketItems.reduce((sum, item) => sum + item.price, 0);
+		this.setText(this._total, `${formatPrice(data)} синапсов`);
 	}
 }

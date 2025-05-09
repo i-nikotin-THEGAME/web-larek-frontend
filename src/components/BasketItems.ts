@@ -5,8 +5,7 @@ import { TBaskeCompact } from "../types";
 
 export interface IBasketItem {
 	id: string;
-	element: HTMLElement;
-	price: number;
+	// element: HTMLElement;
 }
 
 export class BasketItems extends Component<IBasketItem> {
