@@ -18,14 +18,20 @@ export interface IOrder {
 
 export interface ICardsData {
 	cards: ICard[];
-	preview: string | null;
+	getCard(cardId: string): ICard;
+	getPrice(cardId: string): number;
+
 }
 
 export interface IOrdersData {
 	addItem(item: string): void;
 	deleteItem(item: string | null): void;
-	checkOrderValidation(data: TFormOrder): boolean;
-	checkContactValidation(data: Record< keyof TFormContact, string>): boolean;
+	getItems(): string[];
+	checkOrderValidation(): boolean
+	checkContactValidation(): boolean;
+	checkFieldOrder(): string;
+	checkFieldContact(): string;
+	clearOrder(): void;
 }
 
 export type TCardFull = Pick<ICard, 'id' | 'title' | 'price' | 'image' | 'category' | 'description'>;

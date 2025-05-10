@@ -16,11 +16,12 @@ export class Card extends Component<ICard> {
 	protected card: HTMLElement;
 	protected cardCategory: HTMLElement;
 	protected cardTitle: HTMLElement;
-	protected cardDescription?: HTMLElement;
+	protected cardDescription: HTMLElement;
 	protected cardImage: HTMLImageElement;
 	protected cardPrice: HTMLElement;
-	protected cardButton?: HTMLElement;
+	protected cardButton: HTMLButtonElement;
 	protected cardId: string;
+	protected isSelected: boolean = false;
 
 	constructor(protected container: HTMLElement, events: IEvents) {
 		super(container);
@@ -31,21 +32,21 @@ export class Card extends Component<ICard> {
 		this.cardTitle = this.container.querySelector('.card__title');
 		this.cardImage = this.container.querySelector('.card__image');
 		this.cardPrice = this.container.querySelector('.card__price');
-		this.cardDescription = this.container.querySelector('.card__text') || null;
-		this.cardButton = this.container.querySelector('.card__button') || null;
+		this.cardDescription = this.container.querySelector('.card__text');
+		this.cardButton = this.container.querySelector('.card__button');
 
 		if (this.cardButton) {
 			this.cardButton.addEventListener('click', () =>
 				this.events.emit('item-basket:add', { card: this })
 			);
-		} else {
-			this.card.addEventListener('click', () =>
-				this.events.emit('card-preview:open', { card: this })
-			);
 		}
+		this.card.addEventListener('click', () =>
+			this.events.emit('card-preview:open', { card: this })
+		);
+		// }
 	}
 
-	render(data?: Partial<ICard>): HTMLElement {
+	render(data: Partial<ICard>): HTMLElement {
 		if (data) {
 			this.cardCategory.className = 'card__category';
 
@@ -58,9 +59,15 @@ export class Card extends Component<ICard> {
 			this.cardImage.src = data.image || '';
 			this.cardImage.alt = data.title || '';
 			if (data.price !== null) {
+				if (this.cardButton) {
+					this.cardButton.disabled = false;
+				}
 				this.cardPrice.textContent = `${formatPrice(data.price)} синапсов`;
 			} else {
 				this.cardPrice.textContent = 'Бесценно';
+				if (this.cardButton) {
+					this.cardButton.disabled = true;
+				}
 			}
 			if (this.cardDescription !== null) {
 				this.cardDescription.textContent = data.description || ``;
@@ -83,12 +90,4 @@ export class Card extends Component<ICard> {
 	get id() {
 		return this.cardId;
 	}
-
-	// set selected(boolean: boolean) {
-	//     if (!boolean) {
-	//         this.setDisabled(this.cardButton, false);
-	//     } else {
-	//         this.setDisabled(this.cardButton, true);
-	//     }
-	// }
 }

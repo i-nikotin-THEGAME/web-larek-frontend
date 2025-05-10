@@ -8,14 +8,15 @@ interface IForm {
 	error: Record<string, string>;
 }
 
-export class ModalWithForm extends Component<IForm> {
+export class Order extends Component<IForm> {
 	protected inputs: NodeListOf<HTMLInputElement>;
 	protected payment: NodeListOf<HTMLButtonElement>;
 	private activePaymentButton: HTMLButtonElement | null = null;
 	protected errors: HTMLElement;
 	protected formName: string;
 	protected submitButton: HTMLButtonElement;
-	successButton: HTMLButtonElement | null = null;;
+	protected successButton: HTMLButtonElement | null = null;
+	successDescription: HTMLElement;
 
 	constructor(container: HTMLElement, protected events: IEvents) {
 		super(container);
@@ -23,15 +24,19 @@ export class ModalWithForm extends Component<IForm> {
 		this.inputs =
 			this.container.querySelectorAll<HTMLInputElement>('.form__input');
 		this.payment = this.container.querySelectorAll<HTMLButtonElement>(
-			'.button[type="button"]');
+			'.button[type="button"]'
+		);
 		this.formName = this.container.getAttribute('name') || 'success';
 		this.submitButton = this.container.querySelector('.button[type="submit"]');
 		this.successButton = this.container.querySelector('.order-success__close');
+		this.successDescription = this.container.querySelector(
+			'.order-success__description'
+		);
 		this.errors = this.container.querySelector('.form__errors');
 		if (this.submitButton) {
 			this.submitButton.addEventListener('click', (evt) => {
 				evt.preventDefault();
-				this.events.emit(`${this.formName}:submit`);
+				this.events.emit(`${this.formName}:submit`, { order: this });
 			});
 		}
 		this.container.addEventListener('input', (event: InputEvent) => {
@@ -67,7 +72,7 @@ export class ModalWithForm extends Component<IForm> {
 		return { payment: target.name };
 	}
 
-	protected getInputValues() {
+	protected getInputValues(): Record<string, string> {
 		const valuesObject: Record<string, string> = {};
 		this.inputs.forEach((element) => {
 			valuesObject[element.name] = element.value;
@@ -75,13 +80,7 @@ export class ModalWithForm extends Component<IForm> {
 		return valuesObject;
 	}
 
-	set inputValues(data: Record<string, string>) {
-		this.inputs.forEach((element) => {
-			element.value = data[element.name];
-		});
-	}
-
-	set error(validInformation: string ) {
+	set error(validInformation: string) {
 		if (validInformation) {
 			this.showInputError(validInformation);
 		} else {
@@ -100,15 +99,17 @@ export class ModalWithForm extends Component<IForm> {
 	}
 
 	set valid(isValid: boolean) {
-		console.log({ isValid });
 		this.submitButton.disabled = !isValid;
 	}
 
-	// close() {
-	// 	super.close();
-	// 	this._form.reset();
-	// 	this.inputs.forEach((element) => {
-	// 		this.hideInputError(element.name);
-	// 	});
-	// }
+	resetForm(): void {
+		this.payment.forEach((button) => {
+			button.classList.add('button_alt');
+			button.classList.remove('button_alt-active');
+		});
+		this.activePaymentButton = null;
+		this.inputs.forEach((input) => {
+			input.value = '';
+		});
+	}
 }

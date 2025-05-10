@@ -1,5 +1,5 @@
-import validate, { result } from 'validate.js';
-import { IOrdersData, TBaskeCompact, TFormContact, TFormOrder } from '../types';
+import validate from 'validate.js';
+import { IOrdersData } from '../types';
 import { IEvents } from './base/events';
 import { constraintsContacts, constraintsOrder } from '../utils/constants';
 
@@ -8,7 +8,7 @@ export class OrderData implements IOrdersData {
 	protected email: string;
 	protected phone: string;
 	protected address: string;
-	protected total: number;
+	protected total: number = 0;
 	protected items: string[] = [];
 
 	constructor(protected events: IEvents) {}
@@ -37,14 +37,29 @@ export class OrderData implements IOrdersData {
 		return this.total;
 	}
 
+	get payload() {
+		return {
+			payment: this.payment,
+			email: this.email,
+			phone: this.phone,
+			address: this.address,
+			total: this.total,
+			items: this.items,
+		};
+	}
+
 	addItem(item: string): void {
-		this.items.push(item);
+		const hasItem = this.items.includes(item);
+		if (!hasItem) {
+			this.items.push(item);
+			this.events.emit('basket:changed', { cardId: this.items });
+		}
 	}
 
 	deleteItem(item: string | null): void {
 		if (item === null) return;
-
 		this.items = this.items.filter((i) => i !== item);
+		this.events.emit('basket:changed', { cardId: this.items });
 	}
 
 	getItems(): string[] {
@@ -66,7 +81,6 @@ export class OrderData implements IOrdersData {
 			phone: this.phone,
 		};
 		const isValid = !Boolean(validate(dataValidation, constraintsContacts));
-		console.log()
 		return isValid;
 	}
 
@@ -113,5 +127,14 @@ export class OrderData implements IOrdersData {
 		} else {
 			return '';
 		}
+	}
+
+	clearOrder(): void {
+		this.payment = '';
+		this.email = '';
+		this.phone = '';
+		this.address = '';
+		this.total = 0;
+		this.items = [];
 	}
 }

@@ -2,8 +2,7 @@ import { ICard, ICardsData } from '../types';
 import { IEvents } from './base/events';
 
 export class CardData implements ICardsData {
-	protected _cards: ICard[];
-	protected _preview: string | null;
+	protected _cards: ICard[]
 
 	constructor(protected events: IEvents) {
 	}
@@ -12,27 +11,16 @@ export class CardData implements ICardsData {
 		this._cards = cards;
 	}
 
-	set preview(cardId: string | null) {
-        if (!cardId) {
-            this._preview = null;
-            return;
-        }
-        const selectedCard = this.getCard(cardId);
-        if (selectedCard) {
-            this._preview = cardId;
-            this.events.emit('card:selected')
-        }
-    }
-
 	get cards() {
 		return this._cards;
 	}
 
-	get preview () {
-        return this._preview;
-    }
-
-	getCard(cardId: string) {
+	getCard(cardId: string): ICard {
 		return this.cards.find((item) => item.id === cardId);
+	}
+
+	getPrice(cardId: string): number {
+		return  this.cards.find((item) => item.id === cardId).price;
+		
 	}
 }
