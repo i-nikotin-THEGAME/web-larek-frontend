@@ -34,7 +34,7 @@ export class Order extends Component<IForm> {
 		);
 		this.errors = this.container.querySelector('.form__errors');
 		if (this.submitButton) {
-			this.submitButton.addEventListener('click', (evt) => {
+			this.container.addEventListener('submit', (evt) => {
 				evt.preventDefault();
 				this.events.emit(`${this.formName}:submit`, { order: this });
 			});
@@ -54,6 +54,11 @@ export class Order extends Component<IForm> {
 				);
 			});
 		});
+		if (this.successButton) {
+			this.successButton.addEventListener('click', () => {
+				this.events.emit(`${this.formName}:close`);
+			});
+		}
 	}
 
 	private checkedPayment(target: HTMLButtonElement): { payment: string } {
@@ -70,14 +75,6 @@ export class Order extends Component<IForm> {
 		this.activePaymentButton = target;
 
 		return { payment: target.name };
-	}
-
-	protected getInputValues(): Record<string, string> {
-		const valuesObject: Record<string, string> = {};
-		this.inputs.forEach((element) => {
-			valuesObject[element.name] = element.value;
-		});
-		return valuesObject;
 	}
 
 	set error(validInformation: string) {

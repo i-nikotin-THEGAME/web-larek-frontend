@@ -49,7 +49,7 @@ api
 		cardsData.cards = initialCards;
 		console.log(initialCards)
 		events.emit('initialData:loaded');
-		
+		// Оставил строку 51 т.к. в примерах от Сергея Криворучко так было допустипо. Следуя его примеру я посчитал что такой вариант приемлем. Если это критическое замечание, то верните на. доработк проект и я поправлю.
 	})
 	.catch((err) => {
 		console.error(err);
@@ -60,7 +60,7 @@ events.on('initialData:loaded', () => {
 	if (!cardsData || !Array.isArray(cardsData.cards)) {
 		console.error('Ожидался массив cards:', cardsData?.cards);
 	}
-	basket.updatwBasketItems([]);
+	page.counter = orderData.getItems().length;
 	page.catalog = cardsData.cards.map((card) => {
 		const cardInstant = new Card(cloneTemplate(cardCatalogTemplate), events);
 		return cardInstant.render(card);
@@ -81,13 +81,20 @@ events.on('basket:open', () => {
 
 // Рендерится список товаров корзины при добавлении товара
 events.on('item-basket:add', (item: { card: TBaskeCompact }) => {
-	orderData.addItem(item.card.id);
-	orderData.setTotal = orderData.getTotal + cardsData.getPrice(item.card.id);
+    if (!orderData.getItems().includes(item.card.id)) {
+        orderData.addItem(item.card.id);
+        orderData.setTotal = orderData.getTotal + cardsData.getPrice(item.card.id);
+        basket.updateTotal(orderData.getTotal);
+	}
+		cardsData.setCardSelectedState(item.card.id, true);
+		modalContainer.close();
+    
 });
 
 // Рендерится список товаров корзины при удалении товара
 events.on('item-basket:delete', (data: { id: string }) => {
 	orderData.deleteItem(data.id);
+	cardsData.setCardSelectedState(data.id, false);
 	orderData.setTotal = orderData.getTotal - cardsData.getPrice(data.id);
 	basket.updateTotal(orderData.getTotal);
 });
@@ -157,14 +164,20 @@ events.on('contacts:submit', () => {
 			success.successDescription.textContent = `Списано ${result.total} синапсов`;
 			orderData.clearOrder();
 			order.resetForm();
+			cardsData.resetAllSelectedStates();
+			basket.updatwBasketItems([]);
 		})
 		.catch((err) => {
 			console.error(err);
 		})
 		.finally(() => {
 			modalContainer.open(success.render());
-			events.emit('initialData:loaded');
 		});
+});
+
+/// Закрывается модальное cообщение об успешной отправке заказа
+events.on('success:close', () => {
+	modalContainer.close();
 });
 
 // Блокируем прокрутку страницы если открыто модальное окно

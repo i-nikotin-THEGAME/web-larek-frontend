@@ -13,7 +13,6 @@ const CATEGORY_MODIFIERS: Record<string, string> = {
 
 export class Card extends Component<ICard> {
 	protected events: IEvents;
-	protected card: HTMLElement;
 	protected cardCategory: HTMLElement;
 	protected cardTitle: HTMLElement;
 	protected cardDescription: HTMLElement;
@@ -27,7 +26,6 @@ export class Card extends Component<ICard> {
 		super(container);
 		this.events = events;
 
-		this.card = this.container;
 		this.cardCategory = this.container.querySelector('.card__category');
 		this.cardTitle = this.container.querySelector('.card__title');
 		this.cardImage = this.container.querySelector('.card__image');
@@ -36,14 +34,15 @@ export class Card extends Component<ICard> {
 		this.cardButton = this.container.querySelector('.card__button');
 
 		if (this.cardButton) {
-			this.cardButton.addEventListener('click', () =>
-				this.events.emit('item-basket:add', { card: this })
+			this.cardButton.addEventListener('click', (evt) => {
+				this.events.emit('item-basket:add', { card: this, id: evt.target });
+			});
+		}
+		if (!this.cardButton) {
+			this.container.addEventListener('click', () =>
+				this.events.emit('card-preview:open', { card: this })
 			);
 		}
-		this.card.addEventListener('click', () =>
-			this.events.emit('card-preview:open', { card: this })
-		);
-		// }
 	}
 
 	render(data: Partial<ICard>): HTMLElement {
@@ -58,6 +57,17 @@ export class Card extends Component<ICard> {
 			this.cardTitle.textContent = data.title || '';
 			this.cardImage.src = data.image || '';
 			this.cardImage.alt = data.title || '';
+			if (data.isSelected === true) {
+				if (this.cardButton) {
+					this.cardButton.disabled = true;
+					this.cardButton.textContent = 'Товар уже в корзине';
+				}
+			} else {
+				if (this.cardButton) {
+					this.cardButton.disabled = false;
+					this.cardButton.textContent = 'В корзину';
+				}
+			}
 			if (data.price !== null) {
 				if (this.cardButton) {
 					this.cardButton.disabled = false;
@@ -89,5 +99,10 @@ export class Card extends Component<ICard> {
 
 	get id() {
 		return this.cardId;
+	}
+
+	resetCardButton(): void {
+			this.cardButton.disabled = false;
+			this.cardButton.textContent = 'В корзину';
 	}
 }
