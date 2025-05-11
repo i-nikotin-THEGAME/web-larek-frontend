@@ -49,7 +49,9 @@ api
 		cardsData.cards = initialCards;
 		console.log(initialCards)
 		events.emit('initialData:loaded');
-		// Оставил строку 51 т.к. в примерах от Сергея Криворучко так было допустипо. Следуя его примеру я посчитал что такой вариант приемлем. Если это критическое замечание, то верните на. доработк проект и я поправлю.
+		// Оставил строку 51 т.к. в примерах от Сергея Криворучко так было допустипо. Следуя его примеру я посчитал что такой вариант приемлем. 
+		// Если это критическое замечание, то верните на доработку проект и я поправлю.
+		// Кроме того в строках 62-69 (из текущего кода) используются данные, а данные можно использовать только в презентере.
 	})
 	.catch((err) => {
 		console.error(err);
@@ -166,6 +168,7 @@ events.on('contacts:submit', () => {
 			order.resetForm();
 			cardsData.resetAllSelectedStates();
 			basket.updatwBasketItems([]);
+			page.counter = orderData.getItems().length;
 		})
 		.catch((err) => {
 			console.error(err);
